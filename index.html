@@ -484,11 +484,11 @@
     ];
 
     const REJECTED_ITEMS = [
-        { name: "Dirty Plastic Bag", symbol: "☣️" },
+        { name: "Dirty Bag", symbol: "☣️" },
         { name: "Dirty Bottle", symbol: "💩" },
         { name: "Wet Plastic", symbol: "💦" },
         { name: "Carton Box", symbol: "📦" },
-        { name: "Fabric / Cloth", symbol: "👕" },
+        { name: "Fabric", symbol: "👕" },
         { name: "Metal Can", symbol: "🥫" }
     ];
 
@@ -557,14 +557,12 @@
         const itemTemplate = itemPool[Math.floor(Math.random() * itemPool.length)];
 
         fallingItems.push({
-            x: Math.random() * (canvas.width - 70) + 10,
-            y: -50, width: 60, height: 60,
+            x: Math.random() * (canvas.width - 120) + 20,
+            y: -50, width: 80, height: 60,
             speed: 2.5 + Math.random() * 2.5,
             isAccepted: isAccepted,
             name: itemTemplate.name,
-            symbol: itemTemplate.symbol,
-            rot: Math.random() * Math.PI,
-            vRot: (Math.random() - 0.5) * 0.05
+            symbol: itemTemplate.symbol
         });
     }
 
@@ -678,22 +676,19 @@
             ctx.save();
             ctx.translate(item.x + item.width / 2, item.y + item.height / 2);
 
-            ctx.fillStyle = item.isAccepted ? "rgba(255, 255, 255, 0.95)" : "rgba(255, 230, 230, 0.95)";
-            ctx.strokeStyle = item.isAccepted ? "#2ecc71" : "#e74c3c";
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.roundRect(-item.width / 2, -item.height / 2, item.width, item.height, 10);
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.font = "24px sans-serif";
+            // Item Emoji Symbol (Larger)
+            ctx.font = "34px sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillText(item.symbol, 0, -4);
+            ctx.fillText(item.symbol, 0, -10);
 
-            ctx.fillStyle = "#111";
-            ctx.font = "bold 8px Nunito";
-            ctx.fillText(item.name, 0, 18);
+            // Large, clear text label with black outline for high contrast readability
+            ctx.font = "bold 15px Nunito, sans-serif";
+            ctx.strokeStyle = "#000000";
+            ctx.lineWidth = 4;
+            ctx.strokeText(item.name, 0, 22);
+            ctx.fillStyle = "#ffffff";
+            ctx.fillText(item.name, 0, 22);
 
             ctx.restore();
         });
