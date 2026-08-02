@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mario's Plastic Rescue</title>
+    <title>Mario's Plastic Rescue - Collection Challenge</title>
     <style>
         /* --- RESET & BASIC STYLES --- */
         * {
@@ -60,79 +60,146 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 60px;
-            padding: 10px 20px;
+            height: 130px;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             z-index: 10;
             pointer-events: none;
         }
 
         .hud-panel {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 8px 16px;
-            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.65);
+            padding: 6px 12px;
+            border-radius: 12px;
             color: #fff;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             border: 2px solid #fff;
             text-shadow: 2px 2px 0 #000;
+        }
+
+        .hud-timer {
+            font-size: 22px;
+            color: #ffcc00;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 6px 16px;
+        }
+
+        /* COLLECTION TRACKER (TOP RIGHT) */
+        #hud-tracker {
+            background: rgba(0, 0, 0, 0.75);
+            border: 2px solid #fff;
+            border-radius: 10px;
+            padding: 6px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 175px;
+        }
+
+        .tracker-title {
+            color: #ffcc00;
+            font-size: 12px;
+            text-transform: uppercase;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 2px;
+            margin-bottom: 2px;
+        }
+
+        .tracker-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #aaa;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .tracker-item.collected {
+            color: #2ecc71;
+            opacity: 1;
+            font-weight: bold;
+        }
+
+        .tracker-item svg {
+            width: 16px;
+            height: 16px;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease;
+        }
+
+        .tracker-item.collected svg {
+            filter: grayscale(0%);
         }
 
         .hud-buttons {
             pointer-events: auto;
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            margin-top: 6px;
         }
 
         .hud-btn {
             background: #ffcc00;
             border: 2px solid #fff;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 0 #b38f00;
+            box-shadow: 0 3px 0 #b38f00;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: transform 0.1s;
         }
         .hud-btn:active {
-            transform: translateY(3px);
+            transform: translateY(2px);
             box-shadow: 0 1px 0 #b38f00;
         }
 
-        /* --- EDUCATIONAL FEEDBACK POPUP --- */
+        /* --- FLOATING FEEDBACK POPUPS --- */
         #feedback-banner {
             position: absolute;
-            top: 35%;
+            top: 30%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(215, 38, 56, 0.95);
             color: #ffffff;
             border: 4px solid #ffffff;
             border-radius: 16px;
-            padding: 16px 32px;
-            font-size: 26px;
+            padding: 14px 28px;
+            font-size: 24px;
             font-weight: 900;
             text-shadow: 2px 2px 4px #000;
             box-shadow: 0 10px 25px rgba(0,0,0,0.6);
             z-index: 15;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
+            transition: opacity 0.25s ease-in-out;
             white-space: nowrap;
         }
 
         #feedback-banner.show {
             opacity: 1;
+        }
+
+        #feedback-banner.success {
+            background: rgba(46, 204, 113, 0.95);
+        }
+
+        #feedback-banner.duplicate {
+            background: rgba(241, 196, 15, 0.95);
+            color: #222;
+            text-shadow: none;
         }
 
         /* --- UI OVERLAYS & SCREENS --- */
@@ -142,7 +209,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.8);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -162,13 +229,13 @@
             background: #e52521;
             color: white;
             border: 4px solid #ffffff;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 900;
-            padding: 14px 40px;
+            padding: 12px 36px;
             border-radius: 40px;
             cursor: pointer;
             box-shadow: 0 6px 0 #800e0b, 0 10px 10px rgba(0,0,0,0.5);
-            margin-top: 20px;
+            margin-top: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
             text-shadow: 2px 2px 0 #000;
@@ -186,18 +253,18 @@
         /* --- CUTSCENE BOXES --- */
         .cutscene-stage {
             width: 680px;
-            height: 240px;
+            height: 220px;
             background: linear-gradient(to bottom, #330000 0%, #660000 70%, #3d2314 100%);
             border: 4px solid #fff;
             border-radius: 12px;
             position: relative;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             box-shadow: inset 0 0 20px #000;
         }
 
         .cutscene-text {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: #ffe600;
             text-shadow: 2px 2px 4px #000;
@@ -218,7 +285,7 @@
         }
 
         .guide-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 900;
             margin-bottom: 8px;
             text-transform: uppercase;
@@ -246,8 +313,8 @@
         .guide-card.avoid { border-color: #e74c3c; background: #fdf2f2; }
 
         .guide-card svg {
-            width: 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
         }
 
         .guide-card span {
@@ -262,7 +329,7 @@
         .summary-box {
             background: rgba(255, 255, 255, 0.95);
             color: #222;
-            padding: 15px;
+            padding: 12px;
             border-radius: 12px;
             max-width: 600px;
             margin: 10px 0;
@@ -270,20 +337,20 @@
         }
         .summary-box h3 {
             color: #2ecc71;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-align: center;
-            font-size: 18px;
+            font-size: 16px;
         }
         .summary-list {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 6px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .summary-tip {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
             color: #d35400;
             text-align: center;
@@ -299,32 +366,41 @@
     <!-- CANVAS -->
     <canvas id="gameCanvas" width="800" height="600"></canvas>
 
-    <!-- EDUCATIONAL FEEDBACK POPUP -->
+    <!-- FLOATING FEEDBACK BANNER -->
     <div id="feedback-banner">❌ Not Accepted: Item Name</div>
 
     <!-- HUD -->
     <div id="hud" class="hidden">
-        <div class="hud-panel">
-            <span>HEARTS:</span>
-            <span id="hud-hearts">❤️❤️❤️❤️❤️</span>
+        <div>
+            <div class="hud-panel">
+                <span>HEARTS:</span>
+                <span id="hud-hearts">❤️❤️❤️❤️❤️</span>
+            </div>
+            <div class="hud-buttons">
+                <button class="hud-btn" id="btn-pause" onclick="togglePause()">⏸</button>
+                <button class="hud-btn" id="btn-restart" onclick="confirmRestart()">🔄</button>
+            </div>
         </div>
-        <div class="hud-panel">
-            <span>COLLECTED:</span>
-            <span id="hud-progress" style="color: #ffcc00;">0 / 20</span>
+
+        <div class="hud-panel hud-timer">
+            <span>⏱️</span>
+            <span id="hud-timer-text">60s</span>
         </div>
-        <div class="hud-buttons">
-            <button class="hud-btn" id="btn-pause" onclick="togglePause()">⏸</button>
-            <button class="hud-btn" id="btn-restart" onclick="confirmRestart()">🔄</button>
+
+        <!-- COLLECTION TRACKER (TOP RIGHT) -->
+        <div id="hud-tracker">
+            <div class="tracker-title">Collection Checklist</div>
+            <div id="tracker-list"></div>
         </div>
     </div>
 
     <!-- 1. OPENING STORY CUTSCENE -->
     <div id="screen-intro" class="screen">
-        <h1 style="color: #ffcc00; font-size: 32px; text-shadow: 3px 3px 0 #000; margin-bottom: 10px;">MARIO'S PLASTIC RESCUE</h1>
+        <h1 style="color: #ffcc00; font-size: 30px; text-shadow: 3px 3px 0 #000; margin-bottom: 10px;">MARIO'S PLASTIC RESCUE</h1>
         <div class="cutscene-stage" id="intro-stage"></div>
         <div class="cutscene-text">
             Princess Peach has been captured by Bowser!<br>
-            Help Mario collect the correct plastics to clear Bowser's waste trap!
+            Collect all 6 unique accepted plastic types in 60 seconds to break Bowser's trap!
         </div>
         <button class="btn-main" onclick="showItemGuide()">NEXT ➔</button>
     </div>
@@ -332,7 +408,7 @@
     <!-- 2. ITEM GUIDE SCREEN -->
     <div id="screen-guide" class="screen hidden">
         <div class="guide-container">
-            <div class="guide-title" style="color: #2ecc71;">✔ COLLECT THESE (ACCEPTED PLASTICS)</div>
+            <div class="guide-title" style="color: #2ecc71;">✔ COLLECT ALL 6 OF THESE (ACCEPTED)</div>
             <div class="guide-grid" id="guide-accepted-grid"></div>
 
             <div class="guide-title" style="color: #e74c3c;">✖ AVOID THESE (NOT ACCEPTED)</div>
@@ -350,20 +426,20 @@
 
     <!-- 4. VICTORY ENDING SCENE -->
     <div id="screen-victory" class="screen hidden">
-        <h1 style="color: #2ecc71; font-size: 32px; text-shadow: 3px 3px 0 #000; margin-bottom: 10px;">YOU RESCUED PRINCESS PEACH!</h1>
+        <h1 style="color: #2ecc71; font-size: 28px; text-shadow: 3px 3px 0 #000; margin-bottom: 8px;">CONGRATULATIONS!</h1>
         <div class="cutscene-stage" id="victory-stage" style="background: linear-gradient(to bottom, #5c94fc 0%, #80bfff 70%, #55a02e 100%);"></div>
         <div class="cutscene-text" style="font-size: 16px;">
-            You defeated Bowser and learned which plastics our booth accepts!
+            You found every type of plastic our booth accepts and saved Princess Peach!
         </div>
         <div class="summary-box">
-            <h3>ACCEPTED PLASTICS RECAP</h3>
+            <h3>COMPLETED COLLECTION CHECKLIST</h3>
             <div class="summary-list">
-                <div>✔ Plastic Bag</div>
-                <div>✔ Plastic Wrapper</div>
-                <div>✔ Plastic Container</div>
-                <div>✔ Plastic Bottle</div>
-                <div>✔ Hard Plastic Bottle</div>
-                <div>✔ Styrofoam Box</div>
+                <div>✅ Plastic Bag</div>
+                <div>✅ Plastic Wrapper</div>
+                <div>✅ Plastic Container</div>
+                <div>✅ Plastic Bottle</div>
+                <div>✅ Hard Plastic</div>
+                <div>✅ Styrofoam</div>
             </div>
             <div class="summary-tip">
                 Remember: Please bring only clean accepted plastics to our booth!
@@ -374,11 +450,10 @@
 
     <!-- 5. GAME OVER SCENE -->
     <div id="screen-gameover" class="screen hidden">
-        <h1 style="color: #e74c3c; font-size: 34px; text-shadow: 3px 3px 0 #000; margin-bottom: 10px;">GAME OVER</h1>
+        <h1 style="color: #e74c3c; font-size: 32px; text-shadow: 3px 3px 0 #000; margin-bottom: 8px;">TIME EXPIRED!</h1>
         <div class="cutscene-stage" id="gameover-stage"></div>
-        <div class="cutscene-text" style="color: #ff9999; font-size: 18px;">
-            Mario failed to rescue Princess Peach.<br>
-            Bowser's waste trap was too difficult!
+        <div class="cutscene-text" style="color: #ff9999; font-size: 16px;" id="gameover-reason">
+            Mario ran out of time before collecting all accepted plastic types!
         </div>
         <button class="btn-main" onclick="startGame()">RETRY MISSION</button>
     </div>
@@ -461,7 +536,7 @@ function playSound(type) {
 }
 
 /* ==========================================================================
-   SVG VECTOR OBJECT DEFINITIONS (INLINE RENDERED TO CANVAS)
+   SVG VECTOR OBJECT DEFINITIONS (INLINE RENDERED TO CANVAS & HUD)
    ========================================================================== */
 const SVG_DATA = {
     // ACCEPTED ITEMS
@@ -668,11 +743,14 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 let gameState = 'INTRO';
-let score = 0;
-const targetScore = 20;
 let hearts = 5;
 let animationFrameId = null;
 let feedbackTimeout = null;
+
+// Timer & Collection Logic
+let timeRemaining = 60;
+let lastTimerTick = 0;
+let collectedItems = {};
 
 // Mario Player Object
 const mario = {
@@ -691,7 +769,7 @@ const mario = {
 let fallingObjects = [];
 let particles = [];
 let lastSpawnTime = 0;
-let spawnInterval = 1000;
+let spawnInterval = 900;
 
 // Keyboard Input Handler
 const keys = {};
@@ -736,19 +814,48 @@ function populateGuideUI() {
     });
 }
 
-// Show educational feedback overlay for incorrect items
-function triggerEducationalFeedback(itemName) {
+// Render Collection Tracker HUD
+function updateTrackerHUD() {
+    const trackerList = document.getElementById('tracker-list');
+    trackerList.innerHTML = '';
+
+    ACCEPTED_KEYS.forEach(key => {
+        const item = ITEM_TYPES[key];
+        const isCollected = !!collectedItems[key];
+
+        const row = document.createElement('div');
+        row.className = `tracker-item ${isCollected ? 'collected' : ''}`;
+        row.innerHTML = `
+            <span>${isCollected ? '✅' : '⬜'}</span>
+            ${SVG_DATA[key]}
+            <span>${item.name}</span>
+        `;
+        trackerList.appendChild(row);
+    });
+}
+
+// Show educational or collection feedback banner
+function triggerFloatingFeedback(type, text) {
     const banner = document.getElementById('feedback-banner');
-    banner.innerText = `❌ Not Accepted: ${itemName}`;
-    banner.classList.add('show');
+    banner.innerText = text;
+    banner.className = 'show';
+
+    if (type === 'error') {
+        banner.classList.add('error');
+    } else if (type === 'success') {
+        banner.classList.add('success');
+    } else if (type === 'duplicate') {
+        banner.classList.add('duplicate');
+    }
 
     if (feedbackTimeout) {
         clearTimeout(feedbackTimeout);
     }
 
+    const duration = (type === 'duplicate') ? 1000 : 1800;
     feedbackTimeout = setTimeout(() => {
-        banner.classList.remove('show');
-    }, 1800);
+        banner.className = '';
+    }, duration);
 }
 
 // UI Navigation Functions
@@ -764,7 +871,7 @@ function showItemGuide() {
     populateGuideUI();
     showScreen('screen-guide');
     document.getElementById('hud').classList.add('hidden');
-    document.getElementById('feedback-banner').classList.remove('show');
+    document.getElementById('feedback-banner').className = '';
 }
 
 function resetToIntro() {
@@ -772,7 +879,7 @@ function resetToIntro() {
     buildIntroCutscene();
     showScreen('screen-intro');
     document.getElementById('hud').classList.add('hidden');
-    document.getElementById('feedback-banner').classList.remove('show');
+    document.getElementById('feedback-banner').className = '';
 }
 
 function togglePause() {
@@ -783,6 +890,7 @@ function togglePause() {
         gameState = 'PLAYING';
         showScreen(null);
         lastSpawnTime = performance.now();
+        lastTimerTick = performance.now();
         requestAnimationFrame(gameLoop);
     }
 }
@@ -799,33 +907,50 @@ function updateHUD() {
         heartStr += (i < hearts) ? '❤️' : '🖤';
     }
     document.getElementById('hud-hearts').innerText = heartStr;
-    document.getElementById('hud-progress').innerText = `${score} / ${targetScore}`;
+    document.getElementById('hud-timer-text').innerText = `${timeRemaining}s`;
+    updateTrackerHUD();
 }
 
 function startGame() {
     initAudio();
     gameState = 'PLAYING';
-    score = 0;
     hearts = 5;
+    timeRemaining = 60;
+    collectedItems = {};
     fallingObjects = [];
     particles = [];
     mario.x = canvas.width / 2 - mario.width / 2;
     mario.isFlashing = false;
     
-    document.getElementById('feedback-banner').classList.remove('show');
+    document.getElementById('feedback-banner').className = '';
     updateHUD();
     document.getElementById('hud').classList.remove('hidden');
     showScreen(null);
 
-    lastSpawnTime = performance.now();
+    const now = performance.now();
+    lastSpawnTime = now;
+    lastTimerTick = now;
+
     cancelAnimationFrame(animationFrameId);
     animationFrameId = requestAnimationFrame(gameLoop);
 }
 
+// Guaranteed Spawning logic to ensure all uncollected items drop reliably
 function spawnFallingObject() {
-    const isAccepted = Math.random() < 0.60;
-    const pool = isAccepted ? ACCEPTED_KEYS : AVOID_KEYS;
-    const key = pool[Math.floor(Math.random() * pool.length)];
+    const isAccepted = Math.random() < 0.65;
+    let key = '';
+
+    if (isAccepted) {
+        // High chance to spawn an accepted item that hasn't been collected yet
+        const uncollectedKeys = ACCEPTED_KEYS.filter(k => !collectedItems[k]);
+        if (uncollectedKeys.length > 0 && Math.random() < 0.75) {
+            key = uncollectedKeys[Math.floor(Math.random() * uncollectedKeys.length)];
+        } else {
+            key = ACCEPTED_KEYS[Math.floor(Math.random() * ACCEPTED_KEYS.length)];
+        }
+    } else {
+        key = AVOID_KEYS[Math.floor(Math.random() * AVOID_KEYS.length)];
+    }
 
     fallingObjects.push({
         key: key,
@@ -838,8 +963,8 @@ function spawnFallingObject() {
     });
 }
 
-function createParticles(x, y, color) {
-    for (let i = 0; i < 12; i++) {
+function createParticles(x, y, color, count = 12) {
+    for (let i = 0; i < count; i++) {
         particles.push({
             x: x,
             y: y,
@@ -960,7 +1085,25 @@ function drawParticles() {
 function gameLoop(timestamp) {
     if (gameState !== 'PLAYING') return;
 
-    // 1. UPDATE MARIO
+    // 1. UPDATE TIMER
+    if (timestamp - lastTimerTick >= 1000) {
+        timeRemaining--;
+        lastTimerTick = timestamp;
+        updateHUD();
+
+        if (timeRemaining <= 0) {
+            gameState = 'GAMEOVER';
+            playSound('gameover');
+            document.getElementById('gameover-reason').innerText = "Mario ran out of time before collecting all accepted plastic types!";
+            buildGameOverCutscene();
+            showScreen('screen-gameover');
+            document.getElementById('hud').classList.add('hidden');
+            document.getElementById('feedback-banner').className = '';
+            return;
+        }
+    }
+
+    // 2. UPDATE MARIO
     if (keys['left']) {
         mario.x -= mario.speed;
         mario.facing = 'left';
@@ -977,13 +1120,13 @@ function gameLoop(timestamp) {
         if (mario.flashTimer <= 0) mario.isFlashing = false;
     }
 
-    // 2. SPAWN OBJECTS
+    // 3. SPAWN OBJECTS
     if (timestamp - lastSpawnTime > spawnInterval) {
         spawnFallingObject();
         lastSpawnTime = timestamp;
     }
 
-    // 3. COLLISIONS & FEEDBACK
+    // 4. COLLISIONS & COLLECTION HANDLING
     for (let i = fallingObjects.length - 1; i >= 0; i--) {
         let obj = fallingObjects[i];
         obj.y += obj.speed;
@@ -995,40 +1138,52 @@ function gameLoop(timestamp) {
             obj.y + obj.height > mario.y + 10
         ) {
             if (obj.type.accepted) {
-                // ACCEPTED ITEM
-                score++;
-                playSound('coin');
-                createParticles(obj.x + obj.width / 2, obj.y + obj.height / 2, '#2ecc71');
-                updateHUD();
+                // ACCEPTED ITEM CATCH
+                if (!collectedItems[obj.key]) {
+                    // NEW UNIQUE ACCEPTED ITEM
+                    collectedItems[obj.key] = true;
+                    playSound('coin');
+                    createParticles(obj.x + obj.width / 2, obj.y + obj.height / 2, '#2ecc71', 20);
+                    triggerFloatingFeedback('success', `✅ Collected: ${obj.type.name}`);
+                    updateHUD();
 
-                if (score >= targetScore) {
-                    gameState = 'VICTORY';
-                    playSound('win');
-                    buildVictoryCutscene();
-                    showScreen('screen-victory');
-                    document.getElementById('hud').classList.add('hidden');
-                    document.getElementById('feedback-banner').classList.remove('show');
-                    return;
+                    // Check if all 6 unique items have been collected
+                    const totalCollected = Object.keys(collectedItems).length;
+                    if (totalCollected >= ACCEPTED_KEYS.length) {
+                        gameState = 'VICTORY';
+                        playSound('win');
+                        buildVictoryCutscene();
+                        showScreen('screen-victory');
+                        document.getElementById('hud').classList.add('hidden');
+                        document.getElementById('feedback-banner').className = '';
+                        return;
+                    }
+                } else {
+                    // DUPLICATE ACCEPTED ITEM
+                    playSound('coin');
+                    createParticles(obj.x + obj.width / 2, obj.y + obj.height / 2, '#ffcc00', 8);
+                    triggerFloatingFeedback('duplicate', `Already Collected: ${obj.type.name}`);
                 }
             } else {
-                // NOT ACCEPTED ITEM (EDUCATIONAL FEEDBACK)
+                // INCORRECT / NOT ACCEPTED ITEM
                 hearts--;
                 playSound('hurt');
                 triggerScreenShake();
-                triggerEducationalFeedback(obj.type.name);
+                triggerFloatingFeedback('error', `❌ Not Accepted: ${obj.type.name}`);
 
                 mario.isFlashing = true;
                 mario.flashTimer = 25;
-                createParticles(obj.x + obj.width / 2, obj.y + obj.height / 2, '#e74c3c');
+                createParticles(obj.x + obj.width / 2, obj.y + obj.height / 2, '#e74c3c', 15);
                 updateHUD();
 
                 if (hearts <= 0) {
                     gameState = 'GAMEOVER';
                     playSound('gameover');
+                    document.getElementById('gameover-reason').innerText = "Mario ran out of hearts!";
                     buildGameOverCutscene();
                     showScreen('screen-gameover');
                     document.getElementById('hud').classList.add('hidden');
-                    document.getElementById('feedback-banner').classList.remove('show');
+                    document.getElementById('feedback-banner').className = '';
                     return;
                 }
             }
@@ -1042,7 +1197,7 @@ function gameLoop(timestamp) {
         }
     }
 
-    // 4. PARTICLES
+    // 5. PARTICLES
     for (let i = particles.length - 1; i >= 0; i--) {
         let p = particles[i];
         p.x += p.vx;
@@ -1051,7 +1206,7 @@ function gameLoop(timestamp) {
         if (p.life <= 0) particles.splice(i, 1);
     }
 
-    // 5. RENDER CANVAS
+    // 6. RENDER CANVAS
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     drawFallingObjects();
