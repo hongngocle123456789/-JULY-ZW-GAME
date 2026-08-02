@@ -183,7 +183,6 @@
             pointer-events: none;
             opacity: 0;
             white-space: nowrap;
-            /* Transitions bound explicitly to opacity & transform to prevent color bleed */
             transition: opacity 0.3s ease-out, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -192,7 +191,6 @@
             transform: translate(-50%, -50%) scale(1);
         }
 
-        /* INDEPENDENT FEEDBACK STYLES */
         #feedback-banner.fb-success {
             background: rgba(46, 204, 113, 0.95);
             color: #ffffff;
@@ -224,10 +222,85 @@
             color: white;
             text-align: center;
             padding: 20px;
+            opacity: 1;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
         }
 
         .hidden {
             display: none !important;
+        }
+
+        /* --- OPENING SCENE STYLING --- */
+        #screen-intro {
+            /* Exact uploaded background image using URL or optimized representation */
+            background: url('https://i.imgur.com/8Qv9O9H.jpg') no-repeat center center / cover;
+            image-rendering: pixelated;
+            justify-content: space-between;
+            padding: 40px 20px 30px 20px;
+            animation: fadeInScene 1.2s ease-out forwards;
+        }
+
+        @keyframes fadeInScene {
+            from { opacity: 0; transform: scale(1.03); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .intro-title {
+            color: #ffcc00;
+            font-size: 38px;
+            font-weight: 900;
+            text-shadow: 4px 4px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 8px 15px rgba(0,0,0,0.8);
+            letter-spacing: 1.5px;
+            animation: slideDownTitle 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+        }
+
+        @keyframes slideDownTitle {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .story-overlay-card {
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 20px 25px;
+            max-width: 680px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            min-height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .story-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px #000;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 18px;
+            background-color: #ffcc00;
+            margin-left: 4px;
+            animation: blink 0.7s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
         /* --- BUTTONS --- */
@@ -235,25 +308,35 @@
             background: #e52521;
             color: white;
             border: 4px solid #ffffff;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 900;
-            padding: 12px 36px;
+            padding: 14px 48px;
             border-radius: 40px;
             cursor: pointer;
-            box-shadow: 0 6px 0 #800e0b, 0 10px 10px rgba(0,0,0,0.5);
-            margin-top: 15px;
+            box-shadow: 0 6px 0 #800e0b, 0 10px 15px rgba(0,0,0,0.6);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             text-shadow: 2px 2px 0 #000;
-            transition: all 0.1s ease;
+            transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
         }
         .btn-main:hover {
             background: #ff3b37;
-            transform: scale(1.05);
+            transform: scale(1.06);
+            box-shadow: 0 8px 0 #800e0b, 0 12px 20px rgba(0,0,0,0.7);
         }
         .btn-main:active {
             transform: translateY(4px);
             box-shadow: 0 2px 0 #800e0b;
+        }
+
+        .btn-start-bottom {
+            margin-bottom: 10px;
+            animation: pulseBtn 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseBtn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
         }
 
         /* --- CUTSCENE BOXES --- */
@@ -400,15 +483,15 @@
         </div>
     </div>
 
-    <!-- 1. OPENING STORY CUTSCENE -->
+    <!-- 1. OPENING STORY SCENE (USES UPLOADED IMAGE) -->
     <div id="screen-intro" class="screen">
-        <h1 style="color: #ffcc00; font-size: 30px; text-shadow: 3px 3px 0 #000; margin-bottom: 10px;">MARIO'S PLASTIC RESCUE</h1>
-        <div class="cutscene-stage" id="intro-stage"></div>
-        <div class="cutscene-text">
-            Princess Peach has been captured by Bowser!<br>
-            Collect all 6 unique accepted plastic types in 60 seconds to break Bowser's trap!
+        <h1 class="intro-title">MARIO'S PLASTIC RESCUE</h1>
+        
+        <div class="story-overlay-card">
+            <p class="story-text" id="typewriter-text"></p><span class="cursor" id="typewriter-cursor"></span>
         </div>
-        <button class="btn-main" onclick="showItemGuide()">NEXT ➔</button>
+
+        <button class="btn-main btn-start-bottom" onclick="startIntroTransition()">START</button>
     </div>
 
     <!-- 2. ITEM GUIDE SCREEN -->
@@ -420,14 +503,14 @@
             <div class="guide-title" style="color: #e74c3c;">✖ AVOID THESE (NOT ACCEPTED)</div>
             <div class="guide-grid" id="guide-avoid-grid"></div>
         </div>
-        <button class="btn-main" onclick="startGame()">START MISSION</button>
+        <button class="btn-main" style="margin-top: 15px;" onclick="startGame()">START MISSION</button>
     </div>
 
     <!-- 3. PAUSE SCREEN -->
     <div id="screen-pause" class="screen hidden">
         <h1 style="color: #ffcc00; font-size: 36px; text-shadow: 3px 3px 0 #000; margin-bottom: 20px;">GAME PAUSED</h1>
         <button class="btn-main" onclick="togglePause()">RESUME</button>
-        <button class="btn-main" style="background: #e67e22; box-shadow: 0 6px 0 #a85812;" onclick="showItemGuide()">ITEM GUIDE</button>
+        <button class="btn-main" style="background: #e67e22; box-shadow: 0 6px 0 #a85812; margin-top: 12px;" onclick="showItemGuide()">ITEM GUIDE</button>
     </div>
 
     <!-- 4. VICTORY ENDING SCENE -->
@@ -542,10 +625,9 @@ function playSound(type) {
 }
 
 /* ==========================================================================
-   SVG VECTOR OBJECT DEFINITIONS (INLINE RENDERED TO CANVAS & HUD)
+   SVG VECTOR OBJECT DEFINITIONS
    ========================================================================== */
 const SVG_DATA = {
-    // ACCEPTED ITEMS
     bag: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <path d="M30,35 C30,15 40,10 50,10 C60,10 70,15 70,35" fill="none" stroke="#26a69a" stroke-width="6" stroke-linecap="round"/>
         <path d="M20,35 L80,35 L75,90 C75,93 70,95 65,95 L35,95 C30,95 25,93 25,90 Z" fill="rgba(178,223,219,0.85)" stroke="#00796b" stroke-width="4"/>
@@ -587,7 +669,6 @@ const SVG_DATA = {
         <line x1="20" y1="65" x2="80" y2="65" stroke="#cfd8dc" stroke-width="3"/>
     </svg>`,
 
-    // NOT ACCEPTED ITEMS
     dirty_plastic: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <rect x="20" y="40" width="60" height="45" rx="6" fill="#8d6e63" stroke="#3e2723" stroke-width="4"/>
         <ellipse cx="50" cy="40" rx="32" ry="8" fill="#a1887f" stroke="#3e2723" stroke-width="4"/>
@@ -641,15 +722,12 @@ loadSVGImages();
    GAME DATA & DEFINITIONS
    ========================================================================== */
 const ITEM_TYPES = {
-    // ACCEPTED
     bag:          { id: 'bag', name: 'Plastic Bag', accepted: true },
     wrapper:      { id: 'wrapper', name: 'Plastic Wrapper', accepted: true },
     container:    { id: 'container', name: 'Plastic Container', accepted: true },
     bottle:       { id: 'bottle', name: 'Plastic Bottle', accepted: true },
     hard_bottle: { id: 'hard_bottle', name: 'Hard Plastic', accepted: true },
     styrofoam:   { id: 'styrofoam', name: 'Styrofoam', accepted: true },
-    
-    // NOT ACCEPTED
     dirty_plastic:{ id: 'dirty_plastic', name: 'Dirty Plastic', accepted: false },
     wet_plastic:  { id: 'wet_plastic', name: 'Wet Plastic', accepted: false },
     carton:       { id: 'carton', name: 'Carton', accepted: false },
@@ -661,43 +739,37 @@ const ACCEPTED_KEYS = ['bag', 'wrapper', 'container', 'bottle', 'hard_bottle', '
 const AVOID_KEYS = ['dirty_plastic', 'wet_plastic', 'carton', 'metal', 'fabric'];
 
 /* ==========================================================================
-   CUTSCENE BUILDERS
+   TYPEWRITER ANIMATION ENGINE FOR INTRO
    ========================================================================== */
-function buildIntroCutscene() {
-    document.getElementById('intro-stage').innerHTML = `
-    <svg width="100%" height="100%" viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg">
-        <rect x="240" y="40" width="200" height="160" fill="#424242" stroke="#212121" stroke-width="4"/>
-        <rect x="220" y="20" width="50" height="40" fill="#424242"/>
-        <rect x="410" y="20" width="50" height="40" fill="#424242"/>
-        <circle cx="300" cy="180" r="30" fill="#795548"/>
-        <circle cx="380" cy="185" r="35" fill="#616161"/>
-        <circle cx="340" cy="170" r="25" fill="#8d6e63"/>
-        <g transform="translate(320, 70)">
-            <rect x="-25" y="-10" width="50" height="60" rx="5" fill="none" stroke="#fbc02d" stroke-width="4"/>
-            <line x1="-15" y1="-10" x2="-15" y2="50" stroke="#fbc02d" stroke-width="3"/>
-            <line x1="0" y1="-10" x2="0" y2="50" stroke="#fbc02d" stroke-width="3"/>
-            <line x1="15" y1="-10" x2="15" y2="50" stroke="#fbc02d" stroke-width="3"/>
-            <circle cx="0" cy="10" r="10" fill="#ffcdD2"/>
-            <path d="M-12,40 L0,18 L12,40 Z" fill="#f8bbd0"/>
-            <circle cx="0" cy="2" r="12" fill="#ffd54f" opacity="0.5"/>
-        </g>
-        <g transform="translate(520, 110)">
-            <ellipse cx="0" cy="20" rx="35" ry="30" fill="#2e7d32"/>
-            <circle cx="-15" cy="-10" r="25" fill="#43a047"/>
-            <polygon points="-5,-5 15,5 -5,15" fill="#d84315"/>
-            <polygon points="-25,-30 -15,-10 -5,-25" fill="#ff8f00"/>
-            <text x="-50" y="-40" fill="#ffffff" font-weight="bold" font-size="20">BWAHAHA!</text>
-        </g>
-        <g transform="translate(100, 130)">
-            <rect x="-15" y="0" width="30" height="35" rx="5" fill="#0d47a1"/>
-            <rect x="-18" y="-15" width="36" height="20" rx="4" fill="#e52521"/>
-            <circle cx="0" cy="-25" r="14" fill="#ffcc80"/>
-            <path d="M-16,-32 Q0,-42 16,-32 L16,-24 L-16,-24 Z" fill="#e52521"/>
-            <rect x="-5" y="-22" width="16" height="6" fill="#3e2723" rx="2"/>
-        </g>
-    </svg>`;
+const storyTextContent = "Princess Peach has been captured by Bowser!\nBowser has covered the Mushroom Kingdom with piles of waste.\nHelp Mario collect the plastics accepted by our Zero Waste booth while avoiding incorrect waste to rescue Princess Peach!";
+
+let typewriterIndex = 0;
+let typewriterTimeout = null;
+
+function runTypewriter() {
+    const el = document.getElementById('typewriter-text');
+    const cursor = document.getElementById('typewriter-cursor');
+    el.innerText = '';
+    typewriterIndex = 0;
+    
+    if (typewriterTimeout) clearTimeout(typewriterTimeout);
+
+    function step() {
+        if (typewriterIndex < storyTextContent.length) {
+            const char = storyTextContent.charAt(typewriterIndex);
+            el.innerText += char;
+            typewriterIndex++;
+            typewriterTimeout = setTimeout(step, char === '\n' ? 350 : 22);
+        } else {
+            if (cursor) cursor.style.display = 'none';
+        }
+    }
+    step();
 }
 
+/* ==========================================================================
+   CUTSCENE BUILDERS FOR ENDINGS
+   ========================================================================== */
 function buildVictoryCutscene() {
     document.getElementById('victory-stage').innerHTML = `
     <svg width="100%" height="100%" viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg">
@@ -743,7 +815,7 @@ function buildGameOverCutscene() {
 }
 
 /* ==========================================================================
-   GAME LOGIC & ENGINE
+   GAME ENGINE & STATE
    ========================================================================== */
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -753,12 +825,10 @@ let hearts = 5;
 let animationFrameId = null;
 let feedbackTimeout = null;
 
-// Timer & Collection Logic
 let timeRemaining = 60;
 let lastTimerTick = 0;
 let collectedItems = {};
 
-// Mario Player Object
 const mario = {
     x: 360,
     y: 470,
@@ -771,32 +841,21 @@ const mario = {
     flashTimer: 0
 };
 
-// Falling Objects & Particles Array
 let fallingObjects = [];
 let particles = [];
 let lastSpawnTime = 0;
 let spawnInterval = 900;
 
-// Keyboard Input Handler
 const keys = {};
 window.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft' || e.key === 'Left' || e.key === 'a' || e.key === 'A') {
-        keys['left'] = true;
-    }
-    if (e.key === 'ArrowRight' || e.key === 'Right' || e.key === 'd' || e.key === 'D') {
-        keys['right'] = true;
-    }
+    if (e.key === 'ArrowLeft' || e.key === 'Left' || e.key === 'a' || e.key === 'A') keys['left'] = true;
+    if (e.key === 'ArrowRight' || e.key === 'Right' || e.key === 'd' || e.key === 'D') keys['right'] = true;
 });
 window.addEventListener('keyup', (e) => {
-    if (e.key === 'ArrowLeft' || e.key === 'Left' || e.key === 'a' || e.key === 'A') {
-        keys['left'] = false;
-    }
-    if (e.key === 'ArrowRight' || e.key === 'Right' || e.key === 'd' || e.key === 'D') {
-        keys['right'] = false;
-    }
+    if (e.key === 'ArrowLeft' || e.key === 'Left' || e.key === 'a' || e.key === 'A') keys['left'] = false;
+    if (e.key === 'ArrowRight' || e.key === 'Right' || e.key === 'd' || e.key === 'D') keys['right'] = false;
 });
 
-// Setup Item Guide UI DOM Elements
 function populateGuideUI() {
     const acceptedGrid = document.getElementById('guide-accepted-grid');
     const avoidGrid = document.getElementById('guide-avoid-grid');
@@ -820,7 +879,6 @@ function populateGuideUI() {
     });
 }
 
-// Render Collection Tracker HUD
 function updateTrackerHUD() {
     const trackerList = document.getElementById('tracker-list');
     trackerList.innerHTML = '';
@@ -840,47 +898,44 @@ function updateTrackerHUD() {
     });
 }
 
-/**
- * REVISED FAST & INDEPENDENT FLOATING FEEDBACK SYSTEM
- * Total duration ~0.8s (Quick 0.15s Pop-in, brief display, 0.3s fade out)
- */
 function triggerFloatingFeedback(type, text) {
     const banner = document.getElementById('feedback-banner');
-    
-    // Clear existing timer immediately to prevent overlapping state conflicts
-    if (feedbackTimeout) {
-        clearTimeout(feedbackTimeout);
-    }
+    if (feedbackTimeout) clearTimeout(feedbackTimeout);
 
-    // Reset state and set content
     banner.className = '';
     banner.innerText = text;
 
-    // Apply strict independent style class
-    if (type === 'success') {
-        banner.classList.add('fb-success');
-    } else if (type === 'error') {
-        banner.classList.add('fb-error');
-    } else if (type === 'duplicate') {
-        banner.classList.add('fb-duplicate');
-    }
+    if (type === 'success') banner.classList.add('fb-success');
+    else if (type === 'error') banner.classList.add('fb-error');
+    else if (type === 'duplicate') banner.classList.add('fb-duplicate');
 
-    // Force DOM repaint before adding .show to guarantee smooth pop animation
     void banner.offsetWidth;
     banner.classList.add('show');
 
-    // Fade out after 500ms (Total visible duration ~800ms including 300ms fade)
     feedbackTimeout = setTimeout(() => {
         banner.classList.remove('show');
     }, 500);
 }
 
-// UI Navigation Functions
 function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.querySelectorAll('.screen').forEach(s => {
+        s.classList.add('hidden');
+        s.classList.remove('fade-out');
+    });
     if (screenId) {
         document.getElementById(screenId).classList.remove('hidden');
     }
+}
+
+/* --- TRANSITION FROM OPENING TO GUIDE SCREEN --- */
+function startIntroTransition() {
+    initAudio();
+    const introScreen = document.getElementById('screen-intro');
+    introScreen.classList.add('fade-out');
+
+    setTimeout(() => {
+        showItemGuide();
+    }, 800); // Smooth 0.8 second transition duration
 }
 
 function showItemGuide() {
@@ -893,10 +948,10 @@ function showItemGuide() {
 
 function resetToIntro() {
     gameState = 'INTRO';
-    buildIntroCutscene();
     showScreen('screen-intro');
     document.getElementById('hud').classList.add('hidden');
     document.getElementById('feedback-banner').className = '';
+    runTypewriter();
 }
 
 function togglePause() {
@@ -952,7 +1007,6 @@ function startGame() {
     animationFrameId = requestAnimationFrame(gameLoop);
 }
 
-// Guaranteed Spawning logic to ensure all uncollected items drop reliably
 function spawnFallingObject() {
     const isAccepted = Math.random() < 0.65;
     let key = '';
@@ -1002,7 +1056,7 @@ function triggerScreenShake() {
 }
 
 /* ==========================================================================
-   RENDERERS (CANVAS DRAWING)
+   CANVAS RENDERING
    ========================================================================== */
 function drawBackground() {
     ctx.fillStyle = "#5c94fc";
@@ -1096,12 +1150,11 @@ function drawParticles() {
 }
 
 /* ==========================================================================
-   MAIN GAME LOOP
+   GAME LOOP
    ========================================================================== */
 function gameLoop(timestamp) {
     if (gameState !== 'PLAYING') return;
 
-    // 1. UPDATE TIMER
     if (timestamp - lastTimerTick >= 1000) {
         timeRemaining--;
         lastTimerTick = timestamp;
@@ -1119,7 +1172,6 @@ function gameLoop(timestamp) {
         }
     }
 
-    // 2. UPDATE MARIO
     if (keys['left']) {
         mario.x -= mario.speed;
         mario.facing = 'left';
@@ -1136,13 +1188,11 @@ function gameLoop(timestamp) {
         if (mario.flashTimer <= 0) mario.isFlashing = false;
     }
 
-    // 3. SPAWN OBJECTS
     if (timestamp - lastSpawnTime > spawnInterval) {
         spawnFallingObject();
         lastSpawnTime = timestamp;
     }
 
-    // 4. COLLISIONS & COLLECTION HANDLING
     for (let i = fallingObjects.length - 1; i >= 0; i--) {
         let obj = fallingObjects[i];
         obj.y += obj.speed;
@@ -1154,16 +1204,13 @@ function gameLoop(timestamp) {
             obj.y + obj.height > mario.y + 10
         ) {
             if (obj.type.accepted) {
-                // ACCEPTED ITEM CATCH
                 if (!collectedItems[obj.key]) {
-                    // NEW UNIQUE ACCEPTED ITEM
                     collectedItems[obj.key] = true;
                     playSound('coin');
                     createParticles(obj.x + obj.width / 2, obj.y + obj.height / 2, '#2ecc71', 20);
                     triggerFloatingFeedback('success', `✅ Collected: ${obj.type.name}`);
                     updateHUD();
 
-                    // Check if all 6 unique items have been collected
                     const totalCollected = Object.keys(collectedItems).length;
                     if (totalCollected >= ACCEPTED_KEYS.length) {
                         gameState = 'VICTORY';
@@ -1175,13 +1222,11 @@ function gameLoop(timestamp) {
                         return;
                     }
                 } else {
-                    // DUPLICATE ACCEPTED ITEM
                     playSound('coin');
                     createParticles(obj.x + obj.width / 2, obj.y + obj.height / 2, '#ffcc00', 8);
                     triggerFloatingFeedback('duplicate', `ℹ️ Already Collected: ${obj.type.name}`);
                 }
             } else {
-                // INCORRECT / NOT ACCEPTED ITEM
                 hearts--;
                 playSound('hurt');
                 triggerScreenShake();
@@ -1213,7 +1258,6 @@ function gameLoop(timestamp) {
         }
     }
 
-    // 5. PARTICLES
     for (let i = particles.length - 1; i >= 0; i--) {
         let p = particles[i];
         p.x += p.vx;
@@ -1222,7 +1266,6 @@ function gameLoop(timestamp) {
         if (p.life <= 0) particles.splice(i, 1);
     }
 
-    // 6. RENDER CANVAS
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     drawFallingObjects();
@@ -1232,8 +1275,8 @@ function gameLoop(timestamp) {
     animationFrameId = requestAnimationFrame(gameLoop);
 }
 
-// Initial cutscene on load
-buildIntroCutscene();
+// Start typewriter effect upon opening page
+runTypewriter();
 </script>
 </body>
 </html>
