@@ -29,7 +29,7 @@
             width: 800px;
             height: 600px;
             position: relative;
-            background: linear-gradient(to bottom, #5c94fc 0%, #80bfff 70%, #add8e6 100%);
+            background: #1a3a1a;
             border: 6px solid #222;
             border-radius: 12px;
             overflow: hidden;
@@ -183,7 +183,6 @@
             pointer-events: none;
             opacity: 0;
             white-space: nowrap;
-            /* Transitions bound explicitly to opacity & transform to prevent color bleed */
             transition: opacity 0.3s ease-out, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -192,7 +191,6 @@
             transform: translate(-50%, -50%) scale(1);
         }
 
-        /* INDEPENDENT FEEDBACK STYLES */
         #feedback-banner.fb-success {
             background: rgba(46, 204, 113, 0.95);
             color: #ffffff;
@@ -363,19 +361,68 @@
             border-top: 2px dashed #ccc;
             padding-top: 6px;
         }
+
+        /* --- CALL TO ACTION BOX --- */
+        .cta-box {
+            background: rgba(255, 255, 255, 0.97);
+            color: #222;
+            padding: 14px 20px;
+            border-radius: 12px;
+            max-width: 520px;
+            margin: 8px 0;
+            text-align: left;
+            border: 3px solid #ffcc00;
+            box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);
+        }
+        .cta-box .cta-heading {
+            font-size: 13px;
+            font-weight: 900;
+            color: #e52521;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .cta-box .cta-checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .cta-box .cta-checklist li {
+            font-size: 13px;
+            font-weight: 700;
+            color: #333;
+            padding: 4px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.3;
+        }
+        .cta-box .cta-checklist li .check-icon {
+            color: #2ecc71;
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: -1px;
+        }
+        .cta-box .cta-final {
+            font-size: 14px;
+            font-weight: 900;
+            color: #e52521;
+            text-align: center;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 2px dashed #ffcc00;
+        }
     </style>
 </head>
 <body>
 
 <div id="game-container">
     
-    <!-- CANVAS -->
     <canvas id="gameCanvas" width="800" height="600"></canvas>
 
-    <!-- FLOATING FEEDBACK BANNER -->
     <div id="feedback-banner"></div>
 
-    <!-- HUD -->
     <div id="hud" class="hidden">
         <div>
             <div class="hud-panel">
@@ -393,7 +440,6 @@
             <span id="hud-timer-text">60s</span>
         </div>
 
-        <!-- COLLECTION TRACKER (TOP RIGHT) -->
         <div id="hud-tracker">
             <div class="tracker-title">Collection Checklist</div>
             <div id="tracker-list"></div>
@@ -431,15 +477,15 @@
     </div>
 
     <!-- 4. VICTORY ENDING SCENE -->
-    <div id="screen-victory" class="screen hidden">
-        <h1 style="color: #2ecc71; font-size: 28px; text-shadow: 3px 3px 0 #000; margin-bottom: 8px;">CONGRATULATIONS!</h1>
-        <div class="cutscene-stage" id="victory-stage" style="background: linear-gradient(to bottom, #5c94fc 0%, #80bfff 70%, #55a02e 100%);"></div>
-        <div class="cutscene-text" style="font-size: 16px;">
+    <div id="screen-victory" class="screen hidden" style="justify-content: flex-start; padding-top: 10px; overflow-y: auto;">
+        <h1 style="color: #2ecc71; font-size: 24px; text-shadow: 3px 3px 0 #000; margin-bottom: 6px;">CONGRATULATIONS!</h1>
+        <div class="cutscene-stage" id="victory-stage" style="background: linear-gradient(to bottom, #87ceeb 0%, #b0e0b0 70%, #55a02e 100%); width: 600px; height: 160px; margin-bottom: 6px;"></div>
+        <div class="cutscene-text" style="font-size: 14px; margin-bottom: 4px;">
             You found every type of plastic our booth accepts and saved Princess Peach!
         </div>
-        <div class="summary-box">
-            <h3>COMPLETED COLLECTION CHECKLIST</h3>
-            <div class="summary-list">
+        <div class="summary-box" style="max-width: 520px; margin: 4px 0;">
+            <h3 style="font-size: 13px; margin-bottom: 4px;">COMPLETED COLLECTION CHECKLIST</h3>
+            <div class="summary-list" style="font-size: 11px; gap: 3px; margin-bottom: 4px;">
                 <div>✅ Plastic Bag</div>
                 <div>✅ Plastic Wrapper</div>
                 <div>✅ Plastic Container</div>
@@ -447,11 +493,16 @@
                 <div>✅ Hard Plastic</div>
                 <div>✅ Styrofoam</div>
             </div>
-            <div class="summary-tip">
-                Remember: Please bring only clean accepted plastics to our booth!
-            </div>
         </div>
-        <button class="btn-main" onclick="resetToIntro()">PLAY AGAIN</button>
+        <div class="cta-box">
+            <div class="cta-heading">Before your next visit to our booth, check these two things:</div>
+            <ul class="cta-checklist">
+                <li><span class="check-icon">✓</span> Is it one of the plastics our booth accepts?</li>
+                <li><span class="check-icon">✓</span> Is it clean and dry?</li>
+            </ul>
+            <div class="cta-final">If the answer is "Yes" to both, bring it to our booth!</div>
+        </div>
+        <button class="btn-main" style="margin-top: 8px; margin-bottom: 10px;" onclick="resetToIntro()">PLAY AGAIN</button>
     </div>
 
     <!-- 5. GAME OVER SCENE -->
@@ -542,10 +593,9 @@ function playSound(type) {
 }
 
 /* ==========================================================================
-   SVG VECTOR OBJECT DEFINITIONS (INLINE RENDERED TO CANVAS & HUD)
+   SVG VECTOR OBJECT DEFINITIONS
    ========================================================================== */
 const SVG_DATA = {
-    // ACCEPTED ITEMS
     bag: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <path d="M30,35 C30,15 40,10 50,10 C60,10 70,15 70,35" fill="none" stroke="#26a69a" stroke-width="6" stroke-linecap="round"/>
         <path d="M20,35 L80,35 L75,90 C75,93 70,95 65,95 L35,95 C30,95 25,93 25,90 Z" fill="rgba(178,223,219,0.85)" stroke="#00796b" stroke-width="4"/>
@@ -587,7 +637,6 @@ const SVG_DATA = {
         <line x1="20" y1="65" x2="80" y2="65" stroke="#cfd8dc" stroke-width="3"/>
     </svg>`,
 
-    // NOT ACCEPTED ITEMS
     dirty_plastic: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <rect x="20" y="40" width="60" height="45" rx="6" fill="#8d6e63" stroke="#3e2723" stroke-width="4"/>
         <ellipse cx="50" cy="40" rx="32" ry="8" fill="#a1887f" stroke="#3e2723" stroke-width="4"/>
@@ -641,15 +690,12 @@ loadSVGImages();
    GAME DATA & DEFINITIONS
    ========================================================================== */
 const ITEM_TYPES = {
-    // ACCEPTED
     bag:          { id: 'bag', name: 'Plastic Bag', accepted: true },
     wrapper:      { id: 'wrapper', name: 'Plastic Wrapper', accepted: true },
     container:    { id: 'container', name: 'Plastic Container', accepted: true },
     bottle:       { id: 'bottle', name: 'Plastic Bottle', accepted: true },
     hard_bottle: { id: 'hard_bottle', name: 'Hard Plastic', accepted: true },
     styrofoam:   { id: 'styrofoam', name: 'Styrofoam', accepted: true },
-    
-    // NOT ACCEPTED
     dirty_plastic:{ id: 'dirty_plastic', name: 'Dirty Plastic', accepted: false },
     wet_plastic:  { id: 'wet_plastic', name: 'Wet Plastic', accepted: false },
     carton:       { id: 'carton', name: 'Carton', accepted: false },
@@ -753,12 +799,10 @@ let hearts = 5;
 let animationFrameId = null;
 let feedbackTimeout = null;
 
-// Timer & Collection Logic
 let timeRemaining = 60;
 let lastTimerTick = 0;
 let collectedItems = {};
 
-// Mario Player Object
 const mario = {
     x: 360,
     y: 470,
@@ -768,35 +812,28 @@ const mario = {
     dx: 0,
     facing: 'right',
     isFlashing: false,
-    flashTimer: 0
+    flashTimer: 0,
+    isMoving: false,
+    animFrame: 0,
+    animTimer: 0,
+    idleBob: 0
 };
 
-// Falling Objects & Particles Array
 let fallingObjects = [];
 let particles = [];
 let lastSpawnTime = 0;
 let spawnInterval = 900;
 
-// Keyboard Input Handler
 const keys = {};
 window.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft' || e.key === 'Left' || e.key === 'a' || e.key === 'A') {
-        keys['left'] = true;
-    }
-    if (e.key === 'ArrowRight' || e.key === 'Right' || e.key === 'd' || e.key === 'D') {
-        keys['right'] = true;
-    }
+    if (e.key === 'ArrowLeft' || e.key === 'Left' || e.key === 'a' || e.key === 'A') keys['left'] = true;
+    if (e.key === 'ArrowRight' || e.key === 'Right' || e.key === 'd' || e.key === 'D') keys['right'] = true;
 });
 window.addEventListener('keyup', (e) => {
-    if (e.key === 'ArrowLeft' || e.key === 'Left' || e.key === 'a' || e.key === 'A') {
-        keys['left'] = false;
-    }
-    if (e.key === 'ArrowRight' || e.key === 'Right' || e.key === 'd' || e.key === 'D') {
-        keys['right'] = false;
-    }
+    if (e.key === 'ArrowLeft' || e.key === 'Left' || e.key === 'a' || e.key === 'A') keys['left'] = false;
+    if (e.key === 'ArrowRight' || e.key === 'Right' || e.key === 'd' || e.key === 'D') keys['right'] = false;
 });
 
-// Setup Item Guide UI DOM Elements
 function populateGuideUI() {
     const acceptedGrid = document.getElementById('guide-accepted-grid');
     const avoidGrid = document.getElementById('guide-avoid-grid');
@@ -820,7 +857,6 @@ function populateGuideUI() {
     });
 }
 
-// Render Collection Tracker HUD
 function updateTrackerHUD() {
     const trackerList = document.getElementById('tracker-list');
     trackerList.innerHTML = '';
@@ -840,47 +876,28 @@ function updateTrackerHUD() {
     });
 }
 
-/**
- * REVISED FAST & INDEPENDENT FLOATING FEEDBACK SYSTEM
- * Total duration ~0.8s (Quick 0.15s Pop-in, brief display, 0.3s fade out)
- */
 function triggerFloatingFeedback(type, text) {
     const banner = document.getElementById('feedback-banner');
-    
-    // Clear existing timer immediately to prevent overlapping state conflicts
-    if (feedbackTimeout) {
-        clearTimeout(feedbackTimeout);
-    }
+    if (feedbackTimeout) clearTimeout(feedbackTimeout);
 
-    // Reset state and set content
     banner.className = '';
     banner.innerText = text;
 
-    // Apply strict independent style class
-    if (type === 'success') {
-        banner.classList.add('fb-success');
-    } else if (type === 'error') {
-        banner.classList.add('fb-error');
-    } else if (type === 'duplicate') {
-        banner.classList.add('fb-duplicate');
-    }
+    if (type === 'success') banner.classList.add('fb-success');
+    else if (type === 'error') banner.classList.add('fb-error');
+    else if (type === 'duplicate') banner.classList.add('fb-duplicate');
 
-    // Force DOM repaint before adding .show to guarantee smooth pop animation
     void banner.offsetWidth;
     banner.classList.add('show');
 
-    // Fade out after 500ms (Total visible duration ~800ms including 300ms fade)
     feedbackTimeout = setTimeout(() => {
         banner.classList.remove('show');
     }, 500);
 }
 
-// UI Navigation Functions
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    if (screenId) {
-        document.getElementById(screenId).classList.remove('hidden');
-    }
+    if (screenId) document.getElementById(screenId).classList.remove('hidden');
 }
 
 function showItemGuide() {
@@ -913,16 +930,12 @@ function togglePause() {
 }
 
 function confirmRestart() {
-    if (confirm("Restart game mission?")) {
-        startGame();
-    }
+    if (confirm("Restart game mission?")) startGame();
 }
 
 function updateHUD() {
     let heartStr = '';
-    for (let i = 0; i < 5; i++) {
-        heartStr += (i < hearts) ? '❤️' : '🖤';
-    }
+    for (let i = 0; i < 5; i++) heartStr += (i < hearts) ? '❤️' : '🖤';
     document.getElementById('hud-hearts').innerText = heartStr;
     document.getElementById('hud-timer-text').innerText = `${timeRemaining}s`;
     updateTrackerHUD();
@@ -938,7 +951,11 @@ function startGame() {
     particles = [];
     mario.x = canvas.width / 2 - mario.width / 2;
     mario.isFlashing = false;
-    
+    mario.isMoving = false;
+    mario.animFrame = 0;
+    mario.animTimer = 0;
+    mario.idleBob = 0;
+
     document.getElementById('feedback-banner').className = '';
     updateHUD();
     document.getElementById('hud').classList.remove('hidden');
@@ -952,7 +969,6 @@ function startGame() {
     animationFrameId = requestAnimationFrame(gameLoop);
 }
 
-// Guaranteed Spawning logic to ensure all uncollected items drop reliably
 function spawnFallingObject() {
     const isAccepted = Math.random() < 0.65;
     let key = '';
@@ -979,11 +995,11 @@ function spawnFallingObject() {
     });
 }
 
-function createParticles(x, y, color, count = 12) {
+function createParticles(x, y, color, count) {
+    count = count || 12;
     for (let i = 0; i < count; i++) {
         particles.push({
-            x: x,
-            y: y,
+            x: x, y: y,
             vx: (Math.random() - 0.5) * 8,
             vy: (Math.random() - 0.5) * 8,
             radius: Math.random() * 5 + 2,
@@ -996,88 +1012,215 @@ function createParticles(x, y, color, count = 12) {
 function triggerScreenShake() {
     const container = document.getElementById('game-container');
     container.classList.add('shake');
-    setTimeout(() => {
-        container.classList.remove('shake');
-    }, 300);
+    setTimeout(() => container.classList.remove('shake'), 300);
 }
 
 /* ==========================================================================
-   RENDERERS (CANVAS DRAWING)
+   RENDERERS
    ========================================================================== */
+
 function drawBackground() {
-    ctx.fillStyle = "#5c94fc";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    var skyGrad = ctx.createLinearGradient(0, 0, 0, 360);
+    skyGrad.addColorStop(0, '#5b9bd5');
+    skyGrad.addColorStop(1, '#a8d8ea');
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, 800, 400);
 
-    ctx.fillStyle = "#ffeb3b";
+    ctx.fillStyle = '#ffe066';
     ctx.beginPath();
-    ctx.arc(720, 80, 45, 0, Math.PI * 2);
+    ctx.arc(680, 65, 40, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff5cc';
+    ctx.beginPath();
+    ctx.arc(680, 65, 28, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = '#ffffff';
+    drawCloud(100, 70, 1.0);
+    drawCloud(350, 45, 0.8);
+    drawCloud(550, 90, 0.7);
+
+    ctx.fillStyle = '#6ab04c';
     ctx.beginPath();
-    ctx.arc(120, 90, 25, 0, Math.PI * 2);
-    ctx.arc(145, 80, 35, 0, Math.PI * 2);
-    ctx.arc(170, 90, 25, 0, Math.PI * 2);
+    ctx.moveTo(0, 360);
+    ctx.quadraticCurveTo(150, 280, 300, 340);
+    ctx.quadraticCurveTo(450, 300, 600, 350);
+    ctx.quadraticCurveTo(720, 310, 800, 360);
+    ctx.lineTo(800, 400);
+    ctx.lineTo(0, 400);
     ctx.fill();
 
+    ctx.fillStyle = '#4a8c34';
     ctx.beginPath();
-    ctx.arc(450, 120, 20, 0, Math.PI * 2);
-    ctx.arc(470, 110, 30, 0, Math.PI * 2);
-    ctx.arc(495, 120, 22, 0, Math.PI * 2);
+    ctx.moveTo(0, 380);
+    ctx.quadraticCurveTo(200, 330, 400, 370);
+    ctx.quadraticCurveTo(550, 340, 800, 380);
+    ctx.lineTo(800, 400);
+    ctx.lineTo(0, 400);
     ctx.fill();
 
-    ctx.fillStyle = "#c84c0c";
-    ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
-    ctx.fillStyle = "#00e000";
-    ctx.fillRect(0, canvas.height - 60, canvas.width, 12);
+    ctx.fillStyle = '#3d8b2f';
+    ctx.fillRect(0, 390, 800, 15);
+
+    ctx.fillStyle = '#c8a96e';
+    ctx.fillRect(0, 405, 800, 195);
+
+    ctx.fillStyle = '#b8955a';
+    var dirtDots = [
+        [30,420],[120,440],[250,415],[380,450],[500,425],[620,455],[740,418],
+        [60,460],[180,475],[310,445],[440,470],[560,440],[680,468],[90,490],
+        [210,500],[350,485],[470,510],[590,480],[710,495],[40,530],[160,520],
+        [290,540],[420,525],[540,545],[660,530],[770,520],[100,555],[230,565],
+        [370,550],[500,570],[630,555],[750,560]
+    ];
+    for (var d = 0; d < dirtDots.length; d++) {
+        ctx.fillRect(dirtDots[d][0], dirtDots[d][1], 4, 3);
+    }
+
+    ctx.fillStyle = '#2d7a1e';
+    var grassX = [15, 55, 95, 140, 185, 230, 275, 320, 365, 410, 460, 505, 550, 595, 640, 690, 735, 780];
+    for (var g = 0; g < grassX.length; g++) {
+        ctx.fillRect(grassX[g], 388, 3, 8);
+        ctx.fillRect(grassX[g] + 4, 390, 2, 5);
+    }
+
+    ctx.fillStyle = '#ff6b6b';
+    drawFlower(80, 388);
+    ctx.fillStyle = '#ffd93d';
+    drawFlower(320, 390);
+    ctx.fillStyle = '#ff6b6b';
+    drawFlower(560, 389);
+    ctx.fillStyle = '#c084fc';
+    drawFlower(720, 388);
+}
+
+function drawCloud(x, y, scale) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+    ctx.beginPath();
+    ctx.arc(0, 0, 22, 0, Math.PI * 2);
+    ctx.arc(25, -5, 28, 0, Math.PI * 2);
+    ctx.arc(55, 0, 22, 0, Math.PI * 2);
+    ctx.arc(28, 8, 18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+}
+
+function drawFlower(x, y) {
+    ctx.fillRect(x, y - 10, 2, 12);
+    ctx.beginPath();
+    ctx.arc(x + 1, y - 12, 4, 0, Math.PI * 2);
+    ctx.fill();
 }
 
 function drawMario() {
     ctx.save();
-    ctx.translate(mario.x + mario.width / 2, mario.y + mario.height / 2);
+    var cx = mario.x + mario.width / 2;
+    var cy = mario.y + mario.height / 2;
+
+    var bobOffset = 0;
+    if (!mario.isMoving) {
+        mario.idleBob += 0.06;
+        bobOffset = Math.sin(mario.idleBob) * 2;
+    }
+
+    ctx.translate(cx, cy + bobOffset);
 
     if (mario.facing === 'left') {
         ctx.scale(-1, 1);
     }
 
-    if (mario.isFlashing && Math.floor(Date.now() / 80) % 2 === 0) {
-        ctx.fillStyle = "#ff0000";
+    var flash = mario.isFlashing && Math.floor(Date.now() / 80) % 2 === 0;
+
+    var leftLegOff = 0;
+    var rightLegOff = 0;
+    var bodyTilt = 0;
+    if (mario.isMoving) {
+        if (mario.animFrame === 0) {
+            leftLegOff = -4;
+            rightLegOff = 4;
+            bodyTilt = -1;
+        } else {
+            leftLegOff = 4;
+            rightLegOff = -4;
+            bodyTilt = 1;
+        }
     }
 
-    ctx.fillStyle = ctx.fillStyle === "#ff0000" ? "#ff0000" : "#0d47a1";
-    ctx.fillRect(-18, 5, 36, 30);
-    
-    ctx.fillStyle = ctx.fillStyle === "#ff0000" ? "#ff0000" : "#e52521";
-    ctx.fillRect(-20, -18, 40, 25);
-    
-    ctx.fillStyle = "#ffeb3b";
-    ctx.fillRect(-12, 10, 6, 6);
-    ctx.fillRect(6, 10, 6, 6);
+    ctx.rotate(bodyTilt * Math.PI / 180);
 
-    ctx.fillStyle = "#ffcc80";
-    ctx.fillRect(-16, -38, 32, 22);
+    ctx.fillStyle = flash ? '#ff0000' : '#6b3a2a';
+    ctx.fillRect(-18, 28 + leftLegOff, 14, 8);
+    ctx.fillRect(-20, 32 + leftLegOff, 18, 5);
+    ctx.fillRect(4, 28 + rightLegOff, 14, 8);
+    ctx.fillRect(2, 32 + rightLegOff, 18, 5);
 
-    ctx.fillStyle = "#3e2723";
-    ctx.fillRect(-4, -24, 22, 8);
+    ctx.fillStyle = flash ? '#ff0000' : '#0d47a1';
+    ctx.fillRect(-14, 10 + leftLegOff * 0.5, 11, 20);
+    ctx.fillRect(3, 10 + rightLegOff * 0.5, 11, 20);
 
-    ctx.fillStyle = ctx.fillStyle === "#ff0000" ? "#ff0000" : "#e52521";
-    ctx.fillRect(-18, -46, 36, 12);
-    ctx.fillRect(-6, -49, 24, 6);
+    ctx.fillStyle = flash ? '#ff0000' : '#0d47a1';
+    ctx.fillRect(-18, -10, 36, 24);
 
-    ctx.fillStyle = "#ffffff";
-    ctx.beginPath();
-    ctx.arc(-2, -40, 6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#e52521";
-    ctx.font = "bold 9px sans-serif";
-    ctx.fillText("M", -6, -37);
+    ctx.fillStyle = flash ? '#ff0000' : '#1565c0';
+    ctx.fillRect(-14, -10, 6, 12);
+    ctx.fillRect(8, -10, 6, 12);
+
+    ctx.fillStyle = '#ffeb3b';
+    ctx.fillRect(-12, 2, 4, 4);
+    ctx.fillRect(8, 2, 4, 4);
+
+    ctx.fillStyle = flash ? '#ff0000' : '#e52521';
+    ctx.fillRect(-20, -20, 40, 14);
+
+    ctx.fillStyle = flash ? '#ff0000' : '#e52521';
+    ctx.fillRect(-26, -18, 8, 18);
+    ctx.fillRect(18, -18, 8, 18);
+
+    ctx.fillStyle = flash ? '#ff0000' : '#ffcc80';
+    ctx.fillRect(-26, 2, 8, 6);
+    ctx.fillRect(18, 2, 8, 6);
+
+    ctx.fillStyle = flash ? '#ff0000' : '#ffcc80';
+    ctx.fillRect(-16, -40, 32, 22);
+
+    ctx.fillStyle = flash ? '#ff0000' : '#e52521';
+    ctx.fillRect(-18, -32, 36, 6);
+    ctx.fillRect(-14, -48, 28, 18);
+    ctx.fillRect(-6, -34, 24, 4);
+
+    if (!flash) {
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(0, -40, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#e52521';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('M', 0, -36);
+        ctx.textAlign = 'start';
+    }
+
+    if (!flash) {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(-8, -36, 4, 3);
+        ctx.fillRect(4, -36, 4, 3);
+        ctx.fillStyle = '#3e2723';
+        ctx.fillRect(-8, -34, 4, 4);
+        ctx.fillRect(4, -34, 4, 4);
+        ctx.fillStyle = '#e8a960';
+        ctx.fillRect(-2, -30, 6, 4);
+        ctx.fillStyle = '#3e2723';
+        ctx.fillRect(-10, -26, 22, 4);
+    }
 
     ctx.restore();
 }
 
 function drawFallingObjects() {
-    fallingObjects.forEach(obj => {
-        const img = GAME_IMAGES[obj.key];
+    fallingObjects.forEach(function(obj) {
+        var img = GAME_IMAGES[obj.key];
         if (img) {
             ctx.drawImage(img, obj.x, obj.y, obj.width, obj.height);
         }
@@ -1085,7 +1228,7 @@ function drawFallingObjects() {
 }
 
 function drawParticles() {
-    particles.forEach(p => {
+    particles.forEach(function(p) {
         ctx.fillStyle = p.color;
         ctx.globalAlpha = p.life;
         ctx.beginPath();
@@ -1101,7 +1244,6 @@ function drawParticles() {
 function gameLoop(timestamp) {
     if (gameState !== 'PLAYING') return;
 
-    // 1. UPDATE TIMER
     if (timestamp - lastTimerTick >= 1000) {
         timeRemaining--;
         lastTimerTick = timestamp;
@@ -1119,32 +1261,43 @@ function gameLoop(timestamp) {
         }
     }
 
-    // 2. UPDATE MARIO
+    mario.isMoving = false;
     if (keys['left']) {
         mario.x -= mario.speed;
         mario.facing = 'left';
+        mario.isMoving = true;
     }
     if (keys['right']) {
         mario.x += mario.speed;
         mario.facing = 'right';
+        mario.isMoving = true;
     }
     if (mario.x < 0) mario.x = 0;
     if (mario.x + mario.width > canvas.width) mario.x = canvas.width - mario.width;
+
+    if (mario.isMoving) {
+        mario.animTimer++;
+        if (mario.animTimer >= 8) {
+            mario.animTimer = 0;
+            mario.animFrame = 1 - mario.animFrame;
+        }
+    } else {
+        mario.animTimer = 0;
+        mario.animFrame = 0;
+    }
 
     if (mario.isFlashing) {
         mario.flashTimer--;
         if (mario.flashTimer <= 0) mario.isFlashing = false;
     }
 
-    // 3. SPAWN OBJECTS
     if (timestamp - lastSpawnTime > spawnInterval) {
         spawnFallingObject();
         lastSpawnTime = timestamp;
     }
 
-    // 4. COLLISIONS & COLLECTION HANDLING
-    for (let i = fallingObjects.length - 1; i >= 0; i--) {
-        let obj = fallingObjects[i];
+    for (var i = fallingObjects.length - 1; i >= 0; i--) {
+        var obj = fallingObjects[i];
         obj.y += obj.speed;
 
         if (
@@ -1154,18 +1307,14 @@ function gameLoop(timestamp) {
             obj.y + obj.height > mario.y + 10
         ) {
             if (obj.type.accepted) {
-                // ACCEPTED ITEM CATCH
                 if (!collectedItems[obj.key]) {
-                    // NEW UNIQUE ACCEPTED ITEM
                     collectedItems[obj.key] = true;
                     playSound('coin');
                     createParticles(obj.x + obj.width / 2, obj.y + obj.height / 2, '#2ecc71', 20);
-                    triggerFloatingFeedback('success', `✅ Collected: ${obj.type.name}`);
+                    triggerFloatingFeedback('success', '✅ Collected: ' + obj.type.name);
                     updateHUD();
 
-                    // Check if all 6 unique items have been collected
-                    const totalCollected = Object.keys(collectedItems).length;
-                    if (totalCollected >= ACCEPTED_KEYS.length) {
+                    if (Object.keys(collectedItems).length >= ACCEPTED_KEYS.length) {
                         gameState = 'VICTORY';
                         playSound('win');
                         buildVictoryCutscene();
@@ -1175,18 +1324,15 @@ function gameLoop(timestamp) {
                         return;
                     }
                 } else {
-                    // DUPLICATE ACCEPTED ITEM
                     playSound('coin');
                     createParticles(obj.x + obj.width / 2, obj.y + obj.height / 2, '#ffcc00', 8);
-                    triggerFloatingFeedback('duplicate', `ℹ️ Already Collected: ${obj.type.name}`);
+                    triggerFloatingFeedback('duplicate', 'ℹ️ Already Collected: ' + obj.type.name);
                 }
             } else {
-                // INCORRECT / NOT ACCEPTED ITEM
                 hearts--;
                 playSound('hurt');
                 triggerScreenShake();
-                triggerFloatingFeedback('error', `❌ Not Accepted: ${obj.type.name}`);
-
+                triggerFloatingFeedback('error', '❌ Not Accepted: ' + obj.type.name);
                 mario.isFlashing = true;
                 mario.flashTimer = 25;
                 createParticles(obj.x + obj.width / 2, obj.y + obj.height / 2, '#e74c3c', 15);
@@ -1213,16 +1359,14 @@ function gameLoop(timestamp) {
         }
     }
 
-    // 5. PARTICLES
-    for (let i = particles.length - 1; i >= 0; i--) {
-        let p = particles[i];
+    for (var j = particles.length - 1; j >= 0; j--) {
+        var p = particles[j];
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 0.04;
-        if (p.life <= 0) particles.splice(i, 1);
+        if (p.life <= 0) particles.splice(j, 1);
     }
 
-    // 6. RENDER CANVAS
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     drawFallingObjects();
@@ -1232,7 +1376,6 @@ function gameLoop(timestamp) {
     animationFrameId = requestAnimationFrame(gameLoop);
 }
 
-// Initial cutscene on load
 buildIntroCutscene();
 </script>
 </body>
